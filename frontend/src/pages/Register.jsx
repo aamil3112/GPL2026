@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -27,6 +27,31 @@ const UTR_HELP_APPS = [
   { name: "Paytm", image: "/utr-help-paytm.png" },
 ];
 
+const TEAM_FIELD_ORDER = [
+  "teamName",
+  "ownerName",
+  "ownerPhone",
+  "whatsapp",
+  "city",
+  "address",
+  "ownerAadhaar",
+];
+const INDIVIDUAL_FIELD_ORDER = [
+  "fullName",
+  "dob",
+  "phone",
+  "whatsapp",
+  "city",
+  "address",
+  "role",
+  "battingStyle",
+  "bowlingStyle",
+  "battingOrder",
+  "profilePhoto",
+  "aadhaarPhoto",
+];
+const STEP2_FIELD_ORDER = ["utr", "paymentScreenshot", "agreedToTerms"];
+
 function calculateAge(dobStr, refDate) {
   const dob = new Date(dobStr);
   let age = refDate.getFullYear() - dob.getFullYear();
@@ -51,6 +76,11 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [whatsappSame, setWhatsappSame] = useState(true);
   const [showUtrHelp, setShowUtrHelp] = useState(false);
+
+  const fieldRefs = useRef({});
+  const setFieldRef = (key) => (el) => {
+    fieldRefs.current[key] = el;
+  };
 
   const [fields, setFields] = useState({
     fullName: "",
@@ -98,6 +128,16 @@ export default function Register() {
     setFiles((f) => ({ ...f, [key]: file }));
   }
 
+  function scrollToFirstError(errs, order) {
+    const firstKey = order.find((k) => errs[k]);
+    const node = firstKey && fieldRefs.current[firstKey];
+    if (node) {
+      node.scrollIntoView({ behavior: "smooth", block: "center" });
+      const focusable = node.querySelector?.("input, select, textarea") || node;
+      focusable.focus?.({ preventScroll: true });
+    }
+  }
+
   function validateStep1() {
     const errs = {};
     if (!fields.city.trim()) errs.city = "City is required";
@@ -133,6 +173,9 @@ export default function Register() {
       if (!files.aadhaarPhoto) errs.aadhaarPhoto = "Aadhaar photo is required";
     }
     setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      scrollToFirstError(errs, isTeam ? TEAM_FIELD_ORDER : INDIVIDUAL_FIELD_ORDER);
+    }
     return Object.keys(errs).length === 0;
   }
 
@@ -142,6 +185,9 @@ export default function Register() {
     if (!files.paymentScreenshot) errs.paymentScreenshot = "Payment screenshot is required";
     if (!fields.agreedToTerms) errs.agreedToTerms = "You must agree to the terms";
     setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      scrollToFirstError(errs, STEP2_FIELD_ORDER);
+    }
     return Object.keys(errs).length === 0;
   }
 
@@ -195,15 +241,34 @@ export default function Register() {
       });
     } catch (err) {
       setServerError(err.response?.data?.message || "Something went wrong. Please try again.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setSubmitting(false);
     }
   }
 
-  const inputClass =
-    "w-full rounded-lg border border-gold/20 bg-charcoal px-4 py-2.5 text-white placeholder-white/30 outline-none focus:border-gold";
+  const baseFieldClass =
+    "w-full rounded-lg border bg-charcoal px-4 py-2.5 text-white placeholder-white/30 outline-none focus:border-gold";
+  function fieldClass(key) {
+    return `${baseFieldClass} ${errors[key] ? "border-crimson" : "border-gold/20"}`;
+  }
+  const inputClass = `${baseFieldClass} border-gold/20`;
   const labelClass = "mb-1 block text-sm font-semibold text-white/80";
   const errorClass = "mt-1 text-xs text-crimson-light";
+  const errorCount = Object.keys(errors).length;
+
+  function ErrorSummary() {
+    if (errorCount === 0) return null;
+    return (
+      <div className="flex items-center gap-2 rounded-lg border border-crimson bg-crimson/10 px-4 py-3 text-sm font-semibold text-crimson-light">
+        <span className="text-lg leading-none">⚠</span>
+        <span>
+          Please fix the {errorCount} field{errorCount > 1 ? "s" : ""} marked in red above before
+          continuing.
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-ink text-white">
@@ -264,34 +329,34 @@ export default function Register() {
             <>
               {isTeam ? (
                 <>
-                  <div>
+                  <div ref={setFieldRef("teamName")}>
                     <label className={labelClass}>
                       Team Name <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("teamName")}
                       value={fields.teamName}
                       onChange={(e) => updateField("teamName", e.target.value)}
                     />
                     {errors.teamName && <p className={errorClass}>{errors.teamName}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("ownerName")}>
                     <label className={labelClass}>
                       Owner Full Name <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("ownerName")}
                       value={fields.ownerName}
                       onChange={(e) => updateField("ownerName", e.target.value)}
                     />
                     {errors.ownerName && <p className={errorClass}>{errors.ownerName}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("ownerPhone")}>
                     <label className={labelClass}>
                       Owner Phone <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("ownerPhone")}
                       value={fields.ownerPhone}
                       maxLength={10}
                       type="tel"
@@ -301,7 +366,7 @@ export default function Register() {
                     />
                     {errors.ownerPhone && <p className={errorClass}>{errors.ownerPhone}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("whatsapp")}>
                     <label className={labelClass}>
                       Owner WhatsApp Number <span className="text-crimson-light">*</span>
                     </label>
@@ -316,7 +381,7 @@ export default function Register() {
                     </label>
                     {!whatsappSame && (
                       <input
-                        className={inputClass}
+                        className={fieldClass("whatsapp")}
                         value={fields.ownerWhatsapp}
                         maxLength={10}
                         type="tel"
@@ -336,24 +401,24 @@ export default function Register() {
                       onChange={(e) => updateField("ownerEmail", e.target.value)}
                     />
                   </div>
-                  <div>
+                  <div ref={setFieldRef("city")}>
                     <label className={labelClass}>
                       City <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("city")}
                       value={fields.city}
                       onChange={(e) => updateField("city", e.target.value)}
                     />
                     {errors.city && <p className={errorClass}>{errors.city}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("address")}>
                     <label className={labelClass}>
                       Address <span className="text-crimson-light">*</span>
                     </label>
                     <textarea
                       rows={2}
-                      className={`${inputClass} resize-none`}
+                      className={`${fieldClass("address")} resize-none`}
                       value={fields.address}
                       onChange={(e) => updateField("address", e.target.value)}
                     />
@@ -363,44 +428,46 @@ export default function Register() {
                     label="Team Logo (optional)"
                     onChange={(f) => updateFile("teamLogo", f)}
                   />
-                  <FileInput
-                    label="Owner Aadhaar Card Photo"
-                    required
-                    onChange={(f) => updateFile("ownerAadhaar", f)}
-                    error={errors.ownerAadhaar}
-                  />
+                  <div ref={setFieldRef("ownerAadhaar")}>
+                    <FileInput
+                      label="Owner Aadhaar Card Photo"
+                      required
+                      onChange={(f) => updateFile("ownerAadhaar", f)}
+                      error={errors.ownerAadhaar}
+                    />
+                  </div>
                 </>
               ) : (
                 <>
-                  <div>
+                  <div ref={setFieldRef("fullName")}>
                     <label className={labelClass}>
                       Full Name <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("fullName")}
                       value={fields.fullName}
                       onChange={(e) => updateField("fullName", e.target.value)}
                     />
                     {errors.fullName && <p className={errorClass}>{errors.fullName}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("dob")}>
                     <label className={labelClass}>
                       Date of Birth <span className="text-crimson-light">*</span>
                     </label>
                     <input
                       type="date"
-                      className={inputClass}
+                      className={fieldClass("dob")}
                       value={fields.dob}
                       onChange={(e) => updateField("dob", e.target.value)}
                     />
                     {errors.dob && <p className={errorClass}>{errors.dob}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("phone")}>
                     <label className={labelClass}>
                       Phone Number <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("phone")}
                       value={fields.phone}
                       maxLength={10}
                       type="tel"
@@ -410,7 +477,7 @@ export default function Register() {
                     />
                     {errors.phone && <p className={errorClass}>{errors.phone}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("whatsapp")}>
                     <label className={labelClass}>
                       WhatsApp Number <span className="text-crimson-light">*</span>
                     </label>
@@ -425,7 +492,7 @@ export default function Register() {
                     </label>
                     {!whatsappSame && (
                       <input
-                        className={inputClass}
+                        className={fieldClass("whatsapp")}
                         value={fields.whatsapp}
                         maxLength={10}
                         type="tel"
@@ -445,35 +512,35 @@ export default function Register() {
                       onChange={(e) => updateField("email", e.target.value)}
                     />
                   </div>
-                  <div>
+                  <div ref={setFieldRef("city")}>
                     <label className={labelClass}>
                       City <span className="text-crimson-light">*</span>
                     </label>
                     <input
-                      className={inputClass}
+                      className={fieldClass("city")}
                       value={fields.city}
                       onChange={(e) => updateField("city", e.target.value)}
                     />
                     {errors.city && <p className={errorClass}>{errors.city}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("address")}>
                     <label className={labelClass}>
                       Address <span className="text-crimson-light">*</span>
                     </label>
                     <textarea
                       rows={2}
-                      className={`${inputClass} resize-none`}
+                      className={`${fieldClass("address")} resize-none`}
                       value={fields.address}
                       onChange={(e) => updateField("address", e.target.value)}
                     />
                     {errors.address && <p className={errorClass}>{errors.address}</p>}
                   </div>
-                  <div>
+                  <div ref={setFieldRef("role")}>
                     <label className={labelClass}>
                       Player Role <span className="text-crimson-light">*</span>
                     </label>
                     <select
-                      className={inputClass}
+                      className={fieldClass("role")}
                       value={fields.role}
                       onChange={(e) => updateField("role", e.target.value)}
                     >
@@ -487,12 +554,12 @@ export default function Register() {
                     {errors.role && <p className={errorClass}>{errors.role}</p>}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
+                    <div ref={setFieldRef("battingStyle")}>
                       <label className={labelClass}>
                         Batting Style <span className="text-crimson-light">*</span>
                       </label>
                       <select
-                        className={inputClass}
+                        className={fieldClass("battingStyle")}
                         value={fields.battingStyle}
                         onChange={(e) => updateField("battingStyle", e.target.value)}
                       >
@@ -505,12 +572,12 @@ export default function Register() {
                       </select>
                       {errors.battingStyle && <p className={errorClass}>{errors.battingStyle}</p>}
                     </div>
-                    <div>
+                    <div ref={setFieldRef("bowlingStyle")}>
                       <label className={labelClass}>
                         Bowling Style <span className="text-crimson-light">*</span>
                       </label>
                       <select
-                        className={inputClass}
+                        className={fieldClass("bowlingStyle")}
                         value={fields.bowlingStyle}
                         onChange={(e) => updateField("bowlingStyle", e.target.value)}
                       >
@@ -524,12 +591,12 @@ export default function Register() {
                       {errors.bowlingStyle && <p className={errorClass}>{errors.bowlingStyle}</p>}
                     </div>
                   </div>
-                  <div>
+                  <div ref={setFieldRef("battingOrder")}>
                     <label className={labelClass}>
                       Preferred Batting Order <span className="text-crimson-light">*</span>
                     </label>
                     <select
-                      className={inputClass}
+                      className={fieldClass("battingOrder")}
                       value={fields.battingOrder}
                       onChange={(e) => updateField("battingOrder", e.target.value)}
                     >
@@ -542,20 +609,26 @@ export default function Register() {
                     </select>
                     {errors.battingOrder && <p className={errorClass}>{errors.battingOrder}</p>}
                   </div>
-                  <FileInput
-                    label="Profile Photo"
-                    required
-                    onChange={(f) => updateFile("profilePhoto", f)}
-                    error={errors.profilePhoto}
-                  />
-                  <FileInput
-                    label="Aadhaar Card Photo"
-                    required
-                    onChange={(f) => updateFile("aadhaarPhoto", f)}
-                    error={errors.aadhaarPhoto}
-                  />
+                  <div ref={setFieldRef("profilePhoto")}>
+                    <FileInput
+                      label="Profile Photo"
+                      required
+                      onChange={(f) => updateFile("profilePhoto", f)}
+                      error={errors.profilePhoto}
+                    />
+                  </div>
+                  <div ref={setFieldRef("aadhaarPhoto")}>
+                    <FileInput
+                      label="Aadhaar Card Photo"
+                      required
+                      onChange={(f) => updateFile("aadhaarPhoto", f)}
+                      error={errors.aadhaarPhoto}
+                    />
+                  </div>
                 </>
               )}
+
+              <ErrorSummary />
 
               <button
                 type="button"
@@ -610,12 +683,12 @@ export default function Register() {
                 </p>
               </div>
 
-              <div>
+              <div ref={setFieldRef("utr")}>
                 <label className={labelClass}>
                   UTR / Transaction Reference Number <span className="text-crimson-light">*</span>
                 </label>
                 <input
-                  className={inputClass}
+                  className={fieldClass("utr")}
                   value={fields.utr}
                   maxLength={12}
                   type="text"
@@ -665,23 +738,29 @@ export default function Register() {
                 )}
               </div>
 
-              <FileInput
-                label="Payment Screenshot"
-                required
-                onChange={(f) => updateFile("paymentScreenshot", f)}
-                error={errors.paymentScreenshot}
-              />
-
-              <label className="flex items-start gap-3 text-sm text-white/70">
-                <input
-                  type="checkbox"
-                  className="mt-1 h-4 w-4 accent-gold"
-                  checked={fields.agreedToTerms}
-                  onChange={(e) => updateField("agreedToTerms", e.target.checked)}
+              <div ref={setFieldRef("paymentScreenshot")}>
+                <FileInput
+                  label="Payment Screenshot"
+                  required
+                  onChange={(f) => updateFile("paymentScreenshot", f)}
+                  error={errors.paymentScreenshot}
                 />
-                I have read and agree to the terms of payment and withdrawal policy
-              </label>
-              {errors.agreedToTerms && <p className={errorClass}>{errors.agreedToTerms}</p>}
+              </div>
+
+              <div ref={setFieldRef("agreedToTerms")}>
+                <label className="flex items-start gap-3 text-sm text-white/70">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-gold"
+                    checked={fields.agreedToTerms}
+                    onChange={(e) => updateField("agreedToTerms", e.target.checked)}
+                  />
+                  I have read and agree to the terms of payment and withdrawal policy
+                </label>
+                {errors.agreedToTerms && <p className={errorClass}>{errors.agreedToTerms}</p>}
+              </div>
+
+              <ErrorSummary />
 
               <div className="flex flex-col-reverse gap-3 sm:flex-row">
                 <button
