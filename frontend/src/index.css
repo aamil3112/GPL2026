@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #d4af37;
+  --color-gold-light: #f4d35e;
+  --color-crimson: #b31217;
+  --color-crimson-light: #e63946;
+  --color-ink: #0a0a0a;
+  --color-charcoal: #141414;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: #0a0a0a;
+  color: #f5f0e6;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(90deg, #f4d35e, #d4af37 45%, #b8860b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+::selection {
+  background: #d4af37;
+  color: #0a0a0a;
+}
