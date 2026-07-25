@@ -35,7 +35,9 @@ Required env vars (see `backend/.env.example`):
 - `JWT_SECRET`, `JWT_EXPIRES_IN`
 - `ADMIN_USERNAME`, `ADMIN_PASSWORD` — hardcoded single admin login
 - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-- `CLIENT_URL` — frontend origin, used for CORS
+
+CORS is open to all origins (no credentials/cookies are used — auth is a bearer JWT — so this is
+safe), which means no `CLIENT_URL` env var is needed.
 
 ## Frontend setup
 
@@ -74,8 +76,7 @@ image, replace that file (or add a new one and update `PAYMENT_DETAILS.qrImage` 
 ## Deployment
 
 - **Backend → Render or Railway:** root directory `backend`, build command `npm install`, start
-  command `npm start`, add all env vars from `backend/.env.example`. Set `CLIENT_URL` to the
-  deployed frontend's URL (needed for CORS) — update it again whenever the frontend URL changes.
+  command `npm start`, add all env vars from `backend/.env.example`.
 - **Frontend → Vercel or Netlify:** root/base directory `frontend`, build command `npm run build`,
   publish/output directory `frontend/dist`, and set `VITE_API_URL` to the deployed backend URL.
   - On Netlify specifically, the SPA fallback rule lives in `frontend/public/_redirects`
