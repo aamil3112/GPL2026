@@ -51,9 +51,9 @@ npm run dev              # http://localhost:5173
 Payment bank details are placeholders in `frontend/src/data/tournament.js` (`PAYMENT_DETAILS`) —
 replace `[YOUR BANK NAME]`, `[YOUR ACCOUNT NUMBER]`, `[YOUR IFSC CODE]`, `[YOUR UPI ID]` with real values.
 
-The QR code shown on the payment step is `frontend/public/qr-placeholder.svg`. To use a real QR
-code, drop your image at `frontend/public/qr-placeholder.svg` (or add a new file and update
-`PAYMENT_DETAILS.qrImage` in `tournament.js`).
+The QR code shown on the payment step is `frontend/public/payment-qr.png`. To use a different QR
+image, replace that file (or add a new one and update `PAYMENT_DETAILS.qrImage` in
+`tournament.js`).
 
 ## API routes
 
@@ -64,16 +64,20 @@ code, drop your image at `frontend/public/qr-placeholder.svg` (or add a new file
 | GET | `/api/admin/stats` | Overview stats (auth required) |
 | GET | `/api/admin/registrations` | List registrations, supports `search/type/status/city` query params (auth required) |
 | GET | `/api/admin/registrations/:id` | Single registration detail (auth required) |
-| PATCH | `/api/admin/registrations/:id/approve` | Approve a registration (auth required) |
+| PATCH | `/api/admin/registrations/:id/approve` | Approve a registration; generates a shareable player/team ticket image (auth required) |
 | PATCH | `/api/admin/registrations/:id/reject` | Reject + delete its Cloudinary files (auth required) |
+| DELETE | `/api/admin/registrations/:id` | Permanently delete a **rejected** registration (auth required) |
 | GET | `/api/admin/export/csv?status=all\|approved\|pending` | CSV export (auth required) |
 | GET | `/api/admin/export/json` | JSON export, approved only (auth required) |
-| GET | `/api/admin/activity-log` | Approve/reject audit trail (auth required) |
+| GET | `/api/admin/activity-log` | Approve/reject/delete audit trail (auth required) |
 
 ## Deployment
 
-- **Frontend → Vercel:** set root directory to `frontend`, build command `npm run build`, output
-  `dist`, and set `VITE_API_URL` to the deployed backend URL.
-- **Backend → Render:** set root directory to `backend`, build command `npm install`, start
-  command `npm start`, and add all env vars from `backend/.env.example`. Set `CLIENT_URL` to the
-  deployed Vercel URL.
+- **Backend → Render or Railway:** root directory `backend`, build command `npm install`, start
+  command `npm start`, add all env vars from `backend/.env.example`. Set `CLIENT_URL` to the
+  deployed frontend's URL (needed for CORS) — update it again whenever the frontend URL changes.
+- **Frontend → Vercel or Netlify:** root/base directory `frontend`, build command `npm run build`,
+  publish/output directory `frontend/dist`, and set `VITE_API_URL` to the deployed backend URL.
+  - On Netlify specifically, the SPA fallback rule lives in `frontend/public/_redirects`
+    (`/* /index.html 200`) — it's already in the repo and gets copied into `dist/` on build, so
+    client-side routes like `/register` and `/admin` don't 404 on refresh.
