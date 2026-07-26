@@ -54,6 +54,7 @@ async function uploadIfPresent(file, folder) {
 
 // POST /api/register
 router.post("/", uploadFields, async (req, res) => {
+   console.log("Registration endpoint hit");
   try {
     const { type } = req.body;
 
