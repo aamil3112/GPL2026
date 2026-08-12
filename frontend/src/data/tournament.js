@@ -1,37 +1,37 @@
 export const TOURNAMENT = {
-  name: "Sagar Super Series 2026",
-  tagline: "आपका मंच, आपकी पहचान!",
-  slogan: "One Tournament. One Champion.",
-  type: "Auction Base Tournament — Rubber Ball",
-  teams: 16,
-  month: "August 2026",
-  location: "Sagar, Madhya Pradesh",
-  firstPrize: "₹1,21,000",
-  secondPrize: "₹61,000",
+  name: "Garhakota Premier League (GPL)",
+  tagline: "",
+  slogan: "Play Hard, Win Big",
+  type: "Auction Base Tournament",
+  teams: 8,
+  month: "September 2026",
+  location: "Garhakota, Sagar, Madhya Pradesh",
+  firstPrize: "₹51,000",
+  secondPrize: "₹25,000",
 };
 
 export const CONTACT = {
-  name: "Pavan Kurmi RSP",
-  phone: "7509023894",
+  name: "Arbaj Khan",
+  phone: "8349547662",
 };
 
 export const SOCIALS = {
-  brand: "AP Sports Sagar",
-  youtube: "https://youtube.com",
-  facebook: "https://facebook.com",
-  instagram: "https://instagram.com",
-  whatsappGroup: "https://chat.whatsapp.com/E7twh2YYvjNE5YdHC1T5iV?s=cl&p=i&mlu=0",
+  brand: "",
+  youtube: "",
+  facebook: "",
+  instagram: "",
+  whatsappGroup: "",
 };
 
 export const FEES = {
-  junior: { label: "Junior Player", amount: 400 },
-  senior: { label: "Senior Player", amount: 500 },
-  team: { label: "Team Entry", amount: 20000 },
+  junior: { label: "Junior Player", amount: 300 },
+  senior: { label: "Senior Player", amount: 400 },
+  team: { label: "Team Entry", amount: 11000 },
 };
 
 export const PAYMENT_DETAILS = {
-  accountName: "Pavan Kurmi",
-  upiId: "7509023894-2@ybl",
+  accountName: "Arbaj Khan",
+  upiId: "8349547662-2@ibl",
   mobileNumber: CONTACT.phone,
   qrImage: "/payment-qr.png",
 };

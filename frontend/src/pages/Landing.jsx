@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import posterImg from "../assets/POSTER.jpeg";
+import organiserImg from "../assets/organiser.png";
 import { TOURNAMENT, CONTACT, SOCIALS, FEES } from "../data/tournament";
 
 const REG_CARDS = [
@@ -20,14 +21,13 @@ const REG_CARDS = [
   {
     type: "team",
     title: "Team Entry",
-    desc: "Register your franchise for the 16-team auction battle.",
+    desc: `Register your franchise for the ${TOURNAMENT.teams}-team auction battle.`,
     icon: "🏆",
   },
 ];
 
 const INFO_ITEMS = [
   { label: "Format", value: `${TOURNAMENT.teams} Teams` },
-  { label: "Ball Type", value: "Rubber Ball" },
   { label: "Tournament Type", value: "Auction Based" },
   { label: "Month", value: TOURNAMENT.month },
   { label: "Location", value: TOURNAMENT.location },
@@ -83,7 +83,7 @@ export default function Landing() {
         <div className="mx-auto max-w-lg">
           <img
             src={posterImg}
-            alt="Sagar Super Series 2026 official tournament poster"
+            alt={`${TOURNAMENT.name} official tournament poster`}
             className="w-full rounded-2xl border border-gold/30 shadow-xl shadow-black/40"
             loading="lazy"
           />
@@ -144,9 +144,18 @@ export default function Landing() {
 
       {/* Contact + streaming */}
       <section className="px-4 py-12 sm:px-6 sm:py-16">
-        <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 sm:gap-8">
+        <div
+          className={`mx-auto grid max-w-6xl gap-6 sm:gap-8 ${
+            SOCIALS.brand ? "sm:grid-cols-2" : "sm:max-w-md"
+          }`}
+        >
           <div className="rounded-2xl border border-gold/20 bg-charcoal p-6 text-center sm:p-8">
             <h3 className="text-xl font-bold text-gold-light sm:text-2xl">Contact Organizer</h3>
+            <img
+              src={organiserImg}
+              alt={CONTACT.name}
+              className="mx-auto mt-4 h-28 w-28 rounded-full border-2 border-gold/40 object-cover sm:h-32 sm:w-32"
+            />
             <p className="mt-3 text-lg font-semibold">{CONTACT.name}</p>
             <a
               href={`tel:+91${CONTACT.phone}`}
@@ -155,36 +164,44 @@ export default function Landing() {
               {CONTACT.phone}
             </a>
           </div>
-          <div className="rounded-2xl border border-crimson/30 bg-charcoal p-6 text-center sm:p-8">
-            <h3 className="text-xl font-bold text-crimson-light sm:text-2xl">Live Streaming</h3>
-            <p className="mt-3 text-lg font-semibold">{SOCIALS.brand}</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm font-semibold sm:gap-4">
-              <a
-                href={SOCIALS.youtube}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/20 px-3 py-2 hover:border-gold hover:text-gold sm:px-4"
-              >
-                YouTube
-              </a>
-              <a
-                href={SOCIALS.facebook}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/20 px-3 py-2 hover:border-gold hover:text-gold sm:px-4"
-              >
-                Facebook
-              </a>
-              <a
-                href={SOCIALS.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/20 px-3 py-2 hover:border-gold hover:text-gold sm:px-4"
-              >
-                Instagram
-              </a>
+          {SOCIALS.brand && (
+            <div className="rounded-2xl border border-crimson/30 bg-charcoal p-6 text-center sm:p-8">
+              <h3 className="text-xl font-bold text-crimson-light sm:text-2xl">Live Streaming</h3>
+              <p className="mt-3 text-lg font-semibold">{SOCIALS.brand}</p>
+              <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm font-semibold sm:gap-4">
+                {SOCIALS.youtube && (
+                  <a
+                    href={SOCIALS.youtube}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-white/20 px-3 py-2 hover:border-gold hover:text-gold sm:px-4"
+                  >
+                    YouTube
+                  </a>
+                )}
+                {SOCIALS.facebook && (
+                  <a
+                    href={SOCIALS.facebook}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-white/20 px-3 py-2 hover:border-gold hover:text-gold sm:px-4"
+                  >
+                    Facebook
+                  </a>
+                )}
+                {SOCIALS.instagram && (
+                  <a
+                    href={SOCIALS.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-white/20 px-3 py-2 hover:border-gold hover:text-gold sm:px-4"
+                  >
+                    Instagram
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

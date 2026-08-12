@@ -14,19 +14,25 @@ export default function Footer() {
             {CONTACT.phone}
           </a>
         </p>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-white/60 sm:gap-x-4">
-          <a href={SOCIALS.youtube} target="_blank" rel="noreferrer" className="hover:text-gold">
-            YouTube
-          </a>
-          <span className="text-white/20">|</span>
-          <a href={SOCIALS.facebook} target="_blank" rel="noreferrer" className="hover:text-gold">
-            Facebook
-          </a>
-          <span className="text-white/20">|</span>
-          <a href={SOCIALS.instagram} target="_blank" rel="noreferrer" className="hover:text-gold">
-            Instagram
-          </a>
-        </div>
+        {(SOCIALS.youtube || SOCIALS.facebook || SOCIALS.instagram) && (
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-white/60 sm:gap-x-4">
+            {SOCIALS.youtube && (
+              <a href={SOCIALS.youtube} target="_blank" rel="noreferrer" className="hover:text-gold">
+                YouTube
+              </a>
+            )}
+            {SOCIALS.facebook && (
+              <a href={SOCIALS.facebook} target="_blank" rel="noreferrer" className="hover:text-gold">
+                Facebook
+              </a>
+            )}
+            {SOCIALS.instagram && (
+              <a href={SOCIALS.instagram} target="_blank" rel="noreferrer" className="hover:text-gold">
+                Instagram
+              </a>
+            )}
+          </div>
+        )}
         <p className="mt-6 text-xs text-white/30">
           © {new Date().getFullYear()} {TOURNAMENT.name}. All rights reserved.
         </p>

@@ -1,10 +1,26 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const rateLimit = require("express-rate-limit");
 
 const router = express.Router();
 
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many login attempts. Please try again later." },
+});
+
+function safeEqual(a, b) {
+  const bufA = crypto.createHash("sha256").update(String(a)).digest();
+  const bufB = crypto.createHash("sha256").update(String(b)).digest();
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
 // POST /api/auth/login
-router.post("/login", (req, res) => {
+router.post("/login", loginLimiter, (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -12,8 +28,8 @@ router.post("/login", (req, res) => {
   }
 
   if (
-    username !== process.env.ADMIN_USERNAME ||
-    password !== process.env.ADMIN_PASSWORD
+    !safeEqual(username, process.env.ADMIN_USERNAME || "") ||
+    !safeEqual(password, process.env.ADMIN_PASSWORD || "")
   ) {
     return res.status(401).json({ message: "Invalid credentials" });
   }

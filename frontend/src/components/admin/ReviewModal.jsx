@@ -1,5 +1,6 @@
 import { useState } from "react";
 import StatusBadge from "./StatusBadge";
+import { TOURNAMENT } from "../../data/tournament";
 
 function Field({ label, value }) {
   if (!value) return null;
@@ -33,9 +34,9 @@ async function shareTicket(ticketUrl, caption) {
   try {
     const res = await fetch(ticketUrl);
     const blob = await res.blob();
-    const file = new File([blob], "sss-2026-ticket.png", { type: blob.type || "image/png" });
+    const file = new File([blob], "ticket.png", { type: blob.type || "image/png" });
     if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share({ files: [file], title: "Sagar Super Series 2026", text: caption });
+      await navigator.share({ files: [file], title: TOURNAMENT.name, text: caption });
       return;
     }
   } catch {
@@ -61,7 +62,7 @@ export default function ReviewModal({
   async function handleShare() {
     setSharing(true);
     const name = isTeam ? r.teamName : r.fullName;
-    await shareTicket(r.ticket.url, `${name} — Approved! Token ${r.tokenNumber} — Sagar Super Series 2026`);
+    await shareTicket(r.ticket.url, `${name} — Approved! Token ${r.tokenNumber} — ${TOURNAMENT.name}`);
     setSharing(false);
   }
 
