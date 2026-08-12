@@ -61,8 +61,8 @@ function drawBase(ctx, { badgeLabel, subtitle }) {
   titleGrad.addColorStop(0, GOLD_LIGHT);
   titleGrad.addColorStop(1, GOLD);
   ctx.fillStyle = titleGrad;
-  ctx.font = "46px TicketSansBlack";
-  ctx.fillText("SAGAR SUPER SERIES 2026", WIDTH / 2, 110);
+  ctx.font = "40px TicketSansBlack";
+  ctx.fillText("GARHAKOTA PREMIER LEAGUE (GPL)", WIDTH / 2, 110);
 
   ctx.fillStyle = "#ffffffcc";
   ctx.font = "26px TicketSans";
@@ -84,10 +84,10 @@ function drawBase(ctx, { badgeLabel, subtitle }) {
 
   ctx.fillStyle = GOLD;
   ctx.font = "700 24px TicketSansBold";
-  ctx.fillText("One Tournament. One Champion.", WIDTH / 2, 1200);
+  ctx.fillText("Play Hard, Win Big", WIDTH / 2, 1200);
   ctx.fillStyle = "#ffffff66";
   ctx.font = "20px TicketSans";
-  ctx.fillText("Organizer: Pavan Kurmi RSP • 7509023894", WIDTH / 2, 1240);
+  ctx.fillText("Organizer: Arbaj Khan • 8349547662", WIDTH / 2, 1240);
 }
 
 async function drawPhoto(ctx, url) {
@@ -128,7 +128,7 @@ async function generatePlayerTicket(r) {
 
   drawBase(ctx, {
     badgeLabel: "APPROVED PLAYER",
-    subtitle: "Auction Base Tournament • Rubber Ball",
+    subtitle: "Auction Base Tournament",
   });
   await drawPhoto(ctx, r.profilePhoto?.url);
 
@@ -138,7 +138,7 @@ async function generatePlayerTicket(r) {
   ctx.fillText(r.fullName, WIDTH / 2, 660);
   ctx.fillStyle = "#ffffff99";
   ctx.font = "26px TicketSans";
-  ctx.fillText(`${r.city} • ${r.type === "junior" ? "Junior" : "Senior"} Category`, WIDTH / 2, 705);
+  ctx.fillText(r.city, WIDTH / 2, 705);
 
   fieldBlock(ctx, "Token Number", r.tokenNumber, 120, 830);
   fieldBlock(ctx, "Player Role", r.role, 590, 830);
@@ -155,7 +155,7 @@ async function generateTeamTicket(r) {
 
   drawBase(ctx, {
     badgeLabel: "TEAM REGISTERED",
-    subtitle: "Auction Base Tournament • 16 Teams",
+    subtitle: "Auction Base Tournament • 8 Teams",
   });
   await drawPhoto(ctx, r.teamLogo?.url);
 

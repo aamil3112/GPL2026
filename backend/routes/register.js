@@ -7,30 +7,15 @@ const { generateTokenNumber } = require("../utils/tokenNumber");
 
 const router = express.Router();
 
-const FEES = { junior: 400, senior: 500, team: 20000 };
+const FEES = { player: 460, team: 11000 };
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const UTR_REGEX = /^\d{6,12}$/;
 const PLAYER_ROLES = ["Batsman", "Bowler", "All-rounder"];
 const BATTING_STYLES = ["Right-Handed", "Left-Handed"];
 const BOWLING_STYLES = ["Fast", "Medium", "Spin"];
 
-// Age eligibility is evaluated as of the tournament start date, not "today",
-// so a player's category doesn't drift as the registration window progresses.
-const AGE_CUTOFF_DATE = new Date(2026, 7, 1); // 1 Aug 2026
-const JUNIOR_MAX_AGE = 21;
-
-function calculateAge(dobStr, refDate) {
-  const dob = new Date(dobStr);
-  let age = refDate.getFullYear() - dob.getFullYear();
-  const monthDiff = refDate.getMonth() - dob.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && refDate.getDate() < dob.getDate())) {
-    age--;
-  }
-  return age;
-}
-
 function generateRegistrationId(type) {
-  const prefix = type === "team" ? "SSS26-T" : "SSS26-P";
+  const prefix = type === "team" ? "GPL26-T" : "GPL26-P";
   const random = crypto.randomBytes(3).toString("hex").toUpperCase();
   return `${prefix}-${random}`;
 }
@@ -58,7 +43,7 @@ router.post("/", uploadFields, async (req, res) => {
   try {
     const { type } = req.body;
 
-    if (!["junior", "senior", "team"].includes(type)) {
+    if (!["player", "team"].includes(type)) {
       return res.status(400).json({ message: "Invalid registration type" });
     }
 
@@ -146,18 +131,6 @@ router.post("/", uploadFields, async (req, res) => {
       }
       if (!PHONE_REGEX.test(whatsapp || "")) {
         return res.status(400).json({ message: "Valid 10-digit WhatsApp number is required" });
-      }
-
-      const age = calculateAge(dob, AGE_CUTOFF_DATE);
-      if (type === "junior" && age > JUNIOR_MAX_AGE) {
-        return res.status(400).json({
-          message: `You are above ${JUNIOR_MAX_AGE} years (as on 1 Aug 2026). Please register in the Senior category instead.`,
-        });
-      }
-      if (type === "senior" && age <= JUNIOR_MAX_AGE) {
-        return res.status(400).json({
-          message: `You are ${JUNIOR_MAX_AGE} or under (as on 1 Aug 2026). Please register in the Junior category instead.`,
-        });
       }
 
       const profilePhotoFile = getFile(files, "profilePhoto");

@@ -14,11 +14,11 @@ const registrationSchema = new mongoose.Schema(
     tokenNumber: { type: String, required: true, unique: true },
     type: {
       type: String,
-      enum: ["junior", "senior", "team"],
+      enum: ["player", "team"],
       required: true,
     },
 
-    // Individual (junior/senior) fields
+    // Individual (player) fields
     fullName: { type: String, trim: true },
     dob: { type: Date },
     role: {

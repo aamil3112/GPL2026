@@ -12,12 +12,10 @@ import {
   BATTING_STYLES,
   BOWLING_STYLES,
   BATTING_ORDER_OPTIONS,
-  AGE_CUTOFF_DATE,
-  JUNIOR_MAX_AGE,
   CONTACT,
 } from "../data/tournament";
 
-const TYPES = ["junior", "senior", "team"];
+const TYPES = ["player", "team"];
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const UTR_REGEX = /^\d{6,12}$/;
 
@@ -52,22 +50,12 @@ const INDIVIDUAL_FIELD_ORDER = [
 ];
 const STEP2_FIELD_ORDER = ["utr", "paymentScreenshot", "agreedToTerms"];
 
-function calculateAge(dobStr, refDate) {
-  const dob = new Date(dobStr);
-  let age = refDate.getFullYear() - dob.getFullYear();
-  const monthDiff = refDate.getMonth() - dob.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && refDate.getDate() < dob.getDate())) {
-    age--;
-  }
-  return age;
-}
-
 export default function Register() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const rawType = searchParams.get("type");
-  const type = TYPES.includes(rawType) ? rawType : "junior";
+  const type = TYPES.includes(rawType) ? rawType : "player";
   const isTeam = type === "team";
 
   const [step, setStep] = useState(1);
@@ -154,16 +142,7 @@ export default function Register() {
       if (!files.ownerAadhaar) errs.ownerAadhaar = "Owner Aadhaar photo is required";
     } else {
       if (!fields.fullName.trim()) errs.fullName = "Full name is required";
-      if (!fields.dob) {
-        errs.dob = "Date of birth is required";
-      } else {
-        const age = calculateAge(fields.dob, AGE_CUTOFF_DATE);
-        if (type === "junior" && age > JUNIOR_MAX_AGE) {
-          errs.dob = `You are above ${JUNIOR_MAX_AGE} (as on 1 Aug 2026). Please register in the Senior category instead.`;
-        } else if (type === "senior" && age <= JUNIOR_MAX_AGE) {
-          errs.dob = `You are ${JUNIOR_MAX_AGE} or under (as on 1 Aug 2026). Please register in the Junior category instead.`;
-        }
-      }
+      if (!fields.dob) errs.dob = "Date of birth is required";
       if (!PHONE_REGEX.test(fields.phone)) errs.phone = "Enter a valid 10-digit phone number";
       if (!fields.role) errs.role = "Select a player role";
       if (!fields.battingStyle) errs.battingStyle = "Select a batting style";
@@ -280,7 +259,7 @@ export default function Register() {
         </h1>
 
         {/* Type selector */}
-        <div className="mt-6 grid grid-cols-3 gap-2">
+        <div className="mt-6 grid grid-cols-2 gap-2">
           {TYPES.map((t) => (
             <button
               key={t}
@@ -304,12 +283,6 @@ export default function Register() {
             ₹{FEES[type].amount.toLocaleString("en-IN")}
           </span>
         </p>
-        {!isTeam && (
-          <p className="mt-1 text-center text-xs text-white/40">
-            {type === "junior" ? `Junior: age ${JUNIOR_MAX_AGE} or under` : `Senior: age above ${JUNIOR_MAX_AGE}`}{" "}
-            as on 1 Aug 2026
-          </p>
-        )}
 
         {/* Step indicator */}
         <div className="mt-6 flex items-center justify-center gap-3 text-sm font-semibold">

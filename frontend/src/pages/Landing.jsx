@@ -7,16 +7,10 @@ import { TOURNAMENT, CONTACT, SOCIALS, FEES } from "../data/tournament";
 
 const REG_CARDS = [
   {
-    type: "junior",
-    title: "Junior Player",
-    desc: "Open to junior-age players. Showcase your talent at the auction.",
+    type: "player",
+    title: "Player Registration",
+    desc: "Open to all players. Showcase your talent at the auction.",
     icon: "🏏",
-  },
-  {
-    type: "senior",
-    title: "Senior Player",
-    desc: "Open to senior players ready to be picked in the grand auction.",
-    icon: "🔥",
   },
   {
     type: "team",
@@ -96,7 +90,7 @@ export default function Landing() {
           <h2 className="text-center text-2xl font-black text-gradient-gold sm:text-4xl">
             Choose Your Registration
           </h2>
-          <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-3 sm:gap-6">
+          <div className="mx-auto mt-8 grid max-w-2xl gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6">
             {REG_CARDS.map((card) => (
               <div
                 key={card.type}

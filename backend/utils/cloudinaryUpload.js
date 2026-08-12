@@ -4,7 +4,7 @@ function uploadBufferToCloudinary(buffer, folder) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
-        folder: `sagar-super-series-2026/${folder}`,
+        folder: `gpl-2026/${folder}`,
         resource_type: "image",
         transformation: [{ width: 1600, height: 1600, crop: "limit" }],
       },

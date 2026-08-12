@@ -19,7 +19,7 @@ router.get("/stats", async (req, res) => {
         Registration.countDocuments({ status: "approved" }),
         Registration.countDocuments({ status: "pending" }),
         Registration.countDocuments({ status: "rejected" }),
-        Registration.countDocuments({ type: { $in: ["junior", "senior"] } }),
+        Registration.countDocuments({ type: "player" }),
         Registration.countDocuments({ type: "team" }),
         Registration.aggregate([
           { $match: { status: { $ne: "rejected" } } },

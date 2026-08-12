@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import StatusBadge from "./StatusBadge";
 
-const TYPE_LABELS = { junior: "Junior", senior: "Senior", team: "Team" };
+const TYPE_LABELS = { player: "Player", team: "Team" };
 
 function RowActions({ r, onView, onApprove, onReject, onDelete, className = "" }) {
   return (
@@ -85,8 +85,7 @@ export default function RegistrationsPanel({
         <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-3">
           <select className={selectClass} value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
             <option value="all">All Types</option>
-            <option value="junior">Junior</option>
-            <option value="senior">Senior</option>
+            <option value="player">Player</option>
             <option value="team">Team</option>
           </select>
           <select className={selectClass} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
