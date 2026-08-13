@@ -28,19 +28,21 @@ export default function Success() {
         </p>
         <p className="mt-2 text-xs text-white/40">{TOURNAMENT.name}</p>
 
-        <div className="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-          <p className="text-sm font-semibold text-emerald-400">
-            Join our WhatsApp group for tournament updates
-          </p>
-          <a
-            href={SOCIALS.whatsappGroup}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-3 inline-block w-full rounded-full bg-emerald-500 px-6 py-3 font-bold text-ink transition hover:brightness-110 sm:w-auto"
-          >
-            Join WhatsApp Group
-          </a>
-        </div>
+        {SOCIALS.whatsappGroup && (
+          <div className="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+            <p className="text-sm font-semibold text-emerald-400">
+              Join our WhatsApp group for tournament updates
+            </p>
+            <a
+              href={SOCIALS.whatsappGroup}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-block w-full rounded-full bg-emerald-500 px-6 py-3 font-bold text-ink transition hover:brightness-110 sm:w-auto"
+            >
+              Join WhatsApp Group
+            </a>
+          </div>
+        )}
 
         <Link
           to="/"
