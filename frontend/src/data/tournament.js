@@ -20,7 +20,7 @@ export const SOCIALS = {
   youtube: "",
   facebook: "",
   instagram: "",
-  whatsappGroup: "",
+  whatsappGroup: "https://chat.whatsapp.com/BdZydtQFeP74CZHMmSld6J?s=cl&p=i&mlu=4",
 };
 
 export const FEES = {
