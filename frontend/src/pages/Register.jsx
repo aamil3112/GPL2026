@@ -628,7 +628,7 @@ export default function Register() {
                   <img
                     src={PAYMENT_DETAILS.qrImage}
                     alt="Payment QR Code"
-                    className="h-52 w-52 rounded-xl border border-gold/30 bg-white p-2"
+                    className="mx-auto max-w-[260px] w-full h-auto rounded-xl border border-gold/30 bg-white p-3 object-contain shadow-md"
                   />
                   <p className="text-xs text-white/40">Scan with any UPI app to pay</p>
                 </div>
