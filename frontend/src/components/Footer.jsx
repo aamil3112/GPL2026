@@ -33,7 +33,13 @@ export default function Footer() {
             )}
           </div>
         )}
-        <p className="mt-6 text-xs text-white/30">
+        <p className="mt-4 text-xs text-white/50">
+          यह वेबसाइट Aamil Works द्वारा बनाई गई है। यदि आप भी वेबसाइट बनवाना चाहते हैं तो संपर्क करें:{" "}
+          <a href="tel:+919516081609" className="text-gold hover:underline font-semibold">
+            9516081609
+          </a>
+        </p>
+        <p className="mt-4 text-xs text-white/30">
           © {new Date().getFullYear()} {TOURNAMENT.name}. All rights reserved.
         </p>
       </div>
