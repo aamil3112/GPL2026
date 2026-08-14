@@ -7,7 +7,7 @@ const { generateTokenNumber } = require("../utils/tokenNumber");
 
 const router = express.Router();
 
-const FEES = { player: 460, team: 11000 };
+const FEES = { player: 470, team: 11550 };
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 const UTR_REGEX = /^\d{6,12}$/;
 const PLAYER_ROLES = ["Batsman", "Bowler", "All-rounder"];

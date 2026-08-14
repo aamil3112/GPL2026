@@ -24,8 +24,8 @@ export const SOCIALS = {
 };
 
 export const FEES = {
-  player: { label: "Player Registration", amount: 460 },
-  team: { label: "Team Entry", amount: 11000 },
+  player: { label: "Player Registration", amount: 470 },
+  team: { label: "Team Entry", amount: 11550 },
 };
 
 export const PAYMENT_DETAILS = {
